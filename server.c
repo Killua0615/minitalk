@@ -6,89 +6,85 @@
 /*   By: natsumi <natsumi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 21:33:49 by natsumi           #+#    #+#             */
-/*   Updated: 2025/01/04 04:22:04 by natsumi          ###   ########.fr       */
+/*   Updated: 2025/01/04 04:45:06 by natsumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-static int calc_power(int base, int exp)
+static char *handle_message(const char *str, char c)
 {
-	int result;
-
-	result = 1;
-	while (exp > 0)
-	{
-		result *= base;
-		exp--;
-	}
-	return (result);
-}
-
-static char *append_char(const char *str, char c)
-{
-	char    *new_str;
-	size_t  len;
-	size_t  i;
+	char	*new_str;
+	size_t	len;
+	size_t	i;
 
 	len = ft_strlen(str);
 	new_str = malloc(len + 2);
 	if (!new_str)
 		return (NULL);
-	i = 0;
-	while (i < len)
-	{
+	i = -1;
+	while (++i < len)
 		new_str[i] = str[i];
-		i++;
-	}
 	new_str[i] = c;
 	new_str[i + 1] = '\0';
 	free((void *)str);
 	return (new_str);
 }
 
-static char *handle_char(char *message, int ascii_val)
+static int calc_power(int exp)
 {
-	char *new_message;
+	int result;
 
-	new_message = append_char(message, ascii_val);
-	if (!new_message)
+	result = 1;
+	while (exp > 0)
 	{
-		free(message);
-		return (NULL);
+		result *= 2;
+		exp--;
 	}
-	return (new_message);
+	return (result);
+}
+
+static void process_signal(int sig, int *bit_count, int *ascii_val, char **message)
+{
+	if (!*message && !(*message = ft_strdup("")))
+		return;
+	if (sig == SIGUSR2)
+		*ascii_val += calc_power(7 - *bit_count);
+	(*bit_count)++;
+	if (*bit_count == 8)
+	{
+		*message = handle_message(*message, *ascii_val);
+		if (!*message)
+			return;
+		if (*ascii_val == '\0')
+		{
+			ft_printf("%s\n", *message);
+			free(*message);
+			*message = NULL;
+		}
+		*bit_count = 0;
+		*ascii_val = 0;
+	}
 }
 
 static void handle_signal(int sig)
 {
-	static int  bit_count = 0;
-	static int  ascii_val = 0;
-	static char *message = NULL;
+	static int		bit_count;
+	static int		ascii_val;
+	static char		*message;
 
-	if (!message && !(message = ft_strdup("")))
-		return;
-	if (sig == SIGUSR2)
-		ascii_val += calc_power(2, 7 - bit_count);
-	bit_count++;
-	if (bit_count == 8)
+	if (!message)
 	{
-		if (!(message = handle_char(message, ascii_val)))
-			return;
-		if (ascii_val == '\0')
-		{
-			ft_printf("%s\n", message);
-			free(message);
-			message = NULL;
-		}
 		bit_count = 0;
 		ascii_val = 0;
+		message = NULL;
 	}
+	process_signal(sig, &bit_count, &ascii_val, &message);
 }
 
-int main(void)
+int	main(void)
 {
-	struct sigaction    sa;
+	struct sigaction	sa;
 
 	ft_printf("Server PID: %d\n", getpid());
 	sa.sa_handler = handle_signal;

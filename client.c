@@ -3,20 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   client.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: natsumi <natsumi@student.42.fr>            +#+  +:+       +#+        */
+/*   By: nateshim <nateshim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 21:33:49 by natsumi           #+#    #+#             */
-/*   Updated: 2025/01/02 22:13:43 by natsumi          ###   ########.fr       */
+/*   Updated: 2025/01/04 02:28:46 by nateshim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-/*
-** ビット単位でメッセージを送信する関数
-** @param pid: サーバーのプロセスID
-** @param msg: 送信するメッセージ文字列
-*/
 static void	transmit_message(int pid, char *msg)
 {
 	int	bit_pos;

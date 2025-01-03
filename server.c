@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: natsumi <natsumi@student.42.fr>            +#+  +:+       +#+        */
+/*   By: nateshim <nateshim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 21:33:49 by natsumi           #+#    #+#             */
-/*   Updated: 2025/01/04 05:42:08 by natsumi          ###   ########.fr       */
+/*   Updated: 2025/01/04 05:44:11 by nateshim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ static void	handle_signal(int sig)
 
 int	main(void)
 {
-	struct sigaction sa;
+	struct sigaction	sa;
 
 	ft_printf("Server PID: %d\n", getpid());
 	sa.sa_handler = handle_signal;
@@ -90,10 +90,14 @@ int	main(void)
 	sigemptyset(&sa.sa_mask);
 	sigaddset(&sa.sa_mask, SIGUSR1);
 	sigaddset(&sa.sa_mask, SIGUSR2);
-	if (sigaction(SIGUSR1, &sa, NULL) == -1 || 
-		sigaction(SIGUSR2, &sa, NULL) == -1)
+	if (sigaction(SIGUSR1, &sa, NULL) == -1)
 	{
-		ft_printf("Error: Failed to set signal handlers\n");
+		ft_printf("Error: Failed to set SIGUSR1 handler\n");
+		return (1);
+	}
+	else if (sigaction(SIGUSR2, &sa, NULL) == -1)
+	{
+		ft_printf("Error: Failed to set SIGUSR2 handler\n");
 		return (1);
 	}
 	while (1)

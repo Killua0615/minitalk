@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   client.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nateshim <nateshim@student.42.fr>          +#+  +:+       +#+        */
+/*   By: natsumi <natsumi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 21:33:49 by natsumi           #+#    #+#             */
-/*   Updated: 2025/01/04 04:49:56 by nateshim         ###   ########.fr       */
+/*   Updated: 2025/01/04 05:40:26 by natsumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static void	send_bit(int pid, int bit)
 		if (kill(pid, SIGUSR1) == -1)
 			exit(1);
 	}
-	usleep(150);
+	usleep(500);
 }
 
 static void	transmit_char(int pid, char c)

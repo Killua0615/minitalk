@@ -6,7 +6,7 @@
 /*   By: natsumi <natsumi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 21:33:49 by natsumi           #+#    #+#             */
-/*   Updated: 2025/01/04 05:40:18 by natsumi          ###   ########.fr       */
+/*   Updated: 2025/01/04 05:42:08 by natsumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,33 +80,22 @@ static void	handle_signal(int sig)
 	}
 }
 
-static int setup_signals(void)
+int	main(void)
 {
 	struct sigaction sa;
 
+	ft_printf("Server PID: %d\n", getpid());
 	sa.sa_handler = handle_signal;
 	sa.sa_flags = SA_RESTART;
 	sigemptyset(&sa.sa_mask);
 	sigaddset(&sa.sa_mask, SIGUSR1);
 	sigaddset(&sa.sa_mask, SIGUSR2);
-	if (sigaction(SIGUSR1, &sa, NULL) == -1)
+	if (sigaction(SIGUSR1, &sa, NULL) == -1 || 
+		sigaction(SIGUSR2, &sa, NULL) == -1)
 	{
-		ft_printf("Error: Failed to set SIGUSR1 handler\n");
-		return (0);
-	}
-	if (sigaction(SIGUSR2, &sa, NULL) == -1)
-	{
-		ft_printf("Error: Failed to set SIGUSR2 handler\n");
-		return (0);
-	}
-	return (1);
-}
-
-int	main(void)
-{
-	if (!setup_signals())
+		ft_printf("Error: Failed to set signal handlers\n");
 		return (1);
-	ft_printf("Server PID: %d\n", getpid());
+	}
 	while (1)
 		pause();
 	return (0);

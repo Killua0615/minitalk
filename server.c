@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nateshim <nateshim@student.42.fr>          +#+  +:+       +#+        */
+/*   By: natsumi <natsumi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 21:33:49 by natsumi           #+#    #+#             */
-/*   Updated: 2025/01/04 05:03:06 by nateshim         ###   ########.fr       */
+/*   Updated: 2025/01/04 05:18:17 by natsumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,21 +47,24 @@ static char	*append_char(const char *str, char c)
 static void	process_signal(int sig, int *bit_count, int *ascii_val,
 		char **message)
 {
+	unsigned char byte;
+
 	if (!*message)
 	{
 		*message = ft_strdup("");
 		if (!*message)
-			return ;
+			return;
 	}
 	if (sig == SIGUSR2)
 		*ascii_val += calc_power(7 - *bit_count);
 	(*bit_count)++;
 	if (*bit_count == 8)
 	{
-		*message = append_char(*message, *ascii_val);
+		byte = (unsigned char)*ascii_val;
+		*message = append_char(*message, byte);
 		if (!*message)
-			return ;
-		if (*ascii_val == '\0')
+			return;
+		if (byte == '\0')
 		{
 			ft_printf("%s\n", *message);
 			free(*message);

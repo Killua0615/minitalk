@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   server.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: natsumi <natsumi@student.42.fr>            +#+  +:+       +#+        */
+/*   By: nateshim <nateshim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 21:33:49 by natsumi           #+#    #+#             */
-/*   Updated: 2025/01/04 05:00:34 by natsumi          ###   ########.fr       */
+/*   Updated: 2025/01/04 05:03:06 by nateshim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-static int calc_power(int exp)
+static int	calc_power(int exp)
 {
-	int result;
+	int	result;
 
 	result = 1;
 	while (exp > 0)
@@ -25,7 +25,7 @@ static int calc_power(int exp)
 	return (result);
 }
 
-static char *append_char(const char *str, char c)
+static char	*append_char(const char *str, char c)
 {
 	char	*new_str;
 	size_t	len;
@@ -44,13 +44,14 @@ static char *append_char(const char *str, char c)
 	return (new_str);
 }
 
-static void process_signal(int sig, int *bit_count, int *ascii_val, char **message)
+static void	process_signal(int sig, int *bit_count, int *ascii_val,
+		char **message)
 {
 	if (!*message)
 	{
 		*message = ft_strdup("");
 		if (!*message)
-			return;
+			return ;
 	}
 	if (sig == SIGUSR2)
 		*ascii_val += calc_power(7 - *bit_count);
@@ -59,7 +60,7 @@ static void process_signal(int sig, int *bit_count, int *ascii_val, char **messa
 	{
 		*message = append_char(*message, *ascii_val);
 		if (!*message)
-			return;
+			return ;
 		if (*ascii_val == '\0')
 		{
 			ft_printf("%s\n", *message);
@@ -71,11 +72,11 @@ static void process_signal(int sig, int *bit_count, int *ascii_val, char **messa
 	}
 }
 
-static void handle_signal(int sig)
+static void	handle_signal(int sig)
 {
-	static int		bit_count;
-	static int		ascii_val;
-	static char		*message;
+	static int	bit_count;
+	static int	ascii_val;
+	static char	*message;
 
 	if (!message)
 	{

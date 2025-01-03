@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   client.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: natsumi <natsumi@student.42.fr>            +#+  +:+       +#+        */
+/*   By: nateshim <nateshim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 21:33:49 by natsumi           #+#    #+#             */
-/*   Updated: 2025/01/04 04:22:41 by natsumi          ###   ########.fr       */
+/*   Updated: 2025/01/04 04:49:56 by nateshim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-static void send_bit(int pid, int bit)
+static void	send_bit(int pid, int bit)
 {
 	if (bit)
 	{
@@ -27,9 +27,9 @@ static void send_bit(int pid, int bit)
 	usleep(150);
 }
 
-static void transmit_char(int pid, char c)
+static void	transmit_char(int pid, char c)
 {
-	int bit_pos;
+	int	bit_pos;
 
 	bit_pos = 7;
 	while (bit_pos >= 0)
@@ -39,10 +39,10 @@ static void transmit_char(int pid, char c)
 	}
 }
 
-static void transmit_message(int pid, char *msg)
+static void	transmit_message(int pid, char *msg)
 {
-	int char_pos;
-	int bit_pos;
+	int	char_pos;
+	int	bit_pos;
 
 	char_pos = 0;
 	while (msg[char_pos])
@@ -52,9 +52,9 @@ static void transmit_message(int pid, char *msg)
 		send_bit(pid, 0);
 }
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
-	int	pid;
+	int		pid;
 	char	*msg;
 
 	if (argc != 3)

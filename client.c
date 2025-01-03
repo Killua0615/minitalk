@@ -3,46 +3,58 @@
 /*                                                        :::      ::::::::   */
 /*   client.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nateshim <nateshim@student.42.fr>          +#+  +:+       +#+        */
+/*   By: natsumi <natsumi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 21:33:49 by natsumi           #+#    #+#             */
-/*   Updated: 2025/01/04 02:28:46 by nateshim         ###   ########.fr       */
+/*   Updated: 2025/01/04 04:22:41 by natsumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-static void	transmit_message(int pid, char *msg)
+static void send_bit(int pid, int bit)
 {
-	int	bit_pos;
-	int	char_pos;
-
-	char_pos = 0;
-	while (msg[char_pos])
+	if (bit)
 	{
-		bit_pos = 7;
-		while (bit_pos >= 0)
-		{
-			if ((msg[char_pos] >> bit_pos) & 1)
-				kill(pid, SIGUSR2);
-			else
-				kill(pid, SIGUSR1);
-			bit_pos--;
-			usleep(100);
-		}
-		char_pos++;
+		if (kill(pid, SIGUSR2) == -1)
+			exit(1);
 	}
-	bit_pos = 8;
-	while (bit_pos--)
+	else
 	{
-		kill(pid, SIGUSR1);
-		usleep(100);
+		if (kill(pid, SIGUSR1) == -1)
+			exit(1);
+	}
+	usleep(150);
+}
+
+static void transmit_char(int pid, char c)
+{
+	int bit_pos;
+
+	bit_pos = 7;
+	while (bit_pos >= 0)
+	{
+		send_bit(pid, (c >> bit_pos) & 1);
+		bit_pos--;
 	}
 }
 
-int	main(int argc, char **argv)
+static void transmit_message(int pid, char *msg)
 {
-	int		pid;
+	int char_pos;
+	int bit_pos;
+
+	char_pos = 0;
+	while (msg[char_pos])
+		transmit_char(pid, msg[char_pos++]);
+	bit_pos = 8;
+	while (bit_pos--)
+		send_bit(pid, 0);
+}
+
+int main(int argc, char **argv)
+{
+	int	pid;
 	char	*msg;
 
 	if (argc != 3)

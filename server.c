@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: natsumi <natsumi@student.42.fr>            +#+  +:+       +#+        */
+/*   By: nateshim <nateshim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 21:33:49 by natsumi           #+#    #+#             */
-/*   Updated: 2025/01/04 05:28:13 by natsumi          ###   ########.fr       */
+/*   Updated: 2025/01/04 05:33:48 by nateshim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static void	process_bit(int sig, int *bit_count, int *ascii_val, char **message)
 	{
 		*message = ft_strdup("");
 		if (!*message)
-			return;
+			return ;
 	}
 	if (sig == SIGUSR2)
 		*ascii_val += calc_power(7 - *bit_count);
@@ -68,7 +68,7 @@ static void	handle_signal(int sig)
 	{
 		message = append_char(message, (unsigned char)ascii_val);
 		if (!message)
-			return;
+			return ;
 		if ((unsigned char)ascii_val == '\0')
 		{
 			ft_printf("%s\n", message);
@@ -82,16 +82,20 @@ static void	handle_signal(int sig)
 
 int	main(void)
 {
-	struct sigaction sa;
+	struct sigaction	sa;
 
 	ft_printf("Server PID: %d\n", getpid());
 	sa.sa_handler = handle_signal;
 	sa.sa_flags = 0;
 	sigemptyset(&sa.sa_mask);
-	if (sigaction(SIGUSR1, &sa, NULL) == -1 || 
-		sigaction(SIGUSR2, &sa, NULL) == -1)
+	if (sigaction(SIGUSR1, &sa, NULL) == -1)
 	{
-		ft_printf("Error: Failed to set signal handlers\n");
+		ft_printf("Error: Failed to set SIGUSR1 handler\n");
+		return (1);
+	}
+	else if (sigaction(SIGUSR2, &sa, NULL) == -1)
+	{
+		ft_printf("Error: Failed to set SIGUSR2 handler\n");
 		return (1);
 	}
 	while (1)
